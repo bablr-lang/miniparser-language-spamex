@@ -1,3 +1,3 @@
-# @bablr/miniparser-language-cstml-matchable
+# @bablr/miniparser-language-spamex
 
-This language forms the instruction set for use in BABLR language-defintions.
+A miniparser language for match spamex: Structural Pattern Matcher Expressions
