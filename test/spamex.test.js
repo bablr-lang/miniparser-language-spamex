@@ -1,9 +1,9 @@
 import { expect } from 'expect';
-import { parse as miniparse, print } from '@bablr/miniparser';
+import { parse as miniparse, buildTag, print as miniprint } from '@bablr/miniparser';
 import * as spamex from '@bablr/miniparser-language-spamex';
 
 const emptyRegex = {
-  type: 'Regex',
+  type: 'RegexMatcher',
   pattern: {
     type: 'Pattern',
     alternatives: [
@@ -24,6 +24,292 @@ const emptyRegex = {
   },
 };
 
+const errorCases = [];
+
+const validTestCases = {
+  TokenMatcher: [
+    {
+      print: false,
+      source: '<|ID|>',
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: null,
+        attrs: [],
+        args: [],
+      },
+    },
+    {
+      source: '<| ID |>',
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: null,
+        attrs: [],
+        args: [],
+      },
+    },
+    {
+      source: "<| ID '' |>",
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: { type: 'StringMatcher', value: '' },
+        attrs: [],
+        args: [],
+      },
+    },
+    {
+      source: "<| ID 'foo' |>",
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: { type: 'StringMatcher', value: 'foo' },
+        attrs: [],
+        args: [],
+      },
+    },
+    {
+      source: '<| ID // |>',
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: emptyRegex,
+        attrs: [],
+        args: [],
+      },
+    },
+    {
+      source: '<| ID /of/ |>',
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: {
+          type: 'RegexMatcher',
+          pattern: {
+            type: 'Pattern',
+            alternatives: [
+              {
+                type: 'Alternative',
+                elements: [
+                  {
+                    type: 'Character',
+                    value: 'o',
+                  },
+                  {
+                    type: 'Character',
+                    value: 'f',
+                  },
+                ],
+              },
+            ],
+          },
+          flags: {
+            type: 'Flags',
+            dotAll: false,
+            global: false,
+            ignoreCase: false,
+            multiline: false,
+            sticky: true,
+            unicode: false,
+          },
+        },
+        attrs: [],
+        args: [],
+      },
+    },
+    {
+      source: "<| ID foo='bar' |>",
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: null,
+        attrs: [{ type: 'AttributeMatcher', key: 'foo', value: 'bar' }],
+        args: [],
+      },
+    },
+    {
+      source: "<| ID foo='bar' baz='quux' |>",
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: null,
+        attrs: [
+          { type: 'AttributeMatcher', key: 'foo', value: 'bar' },
+          { type: 'AttributeMatcher', key: 'baz', value: 'quux' },
+        ],
+        args: [],
+      },
+    },
+    {
+      source: "<| ID 'moof' vroom='graarrr' |>",
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: { type: 'StringMatcher', value: 'moof' },
+        attrs: [{ type: 'AttributeMatcher', key: 'vroom', value: 'graarrr' }],
+        args: [],
+      },
+    },
+    {
+      print: false,
+      source: '<| ID {} |>',
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: null,
+        attrs: [],
+        args: [],
+      },
+    },
+    {
+      print: false,
+      source: "<| ID {foo:'bar'} |>",
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: null,
+        attrs: [],
+        args: [{ type: 'Argument', key: 'foo', value: { type: 'StringMatcher', value: 'bar' } }],
+      },
+    },
+    {
+      source: "<| ID { foo: 'bar' } |>",
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: null,
+        attrs: [],
+        args: [{ type: 'Argument', key: 'foo', value: { type: 'StringMatcher', value: 'bar' } }],
+      },
+    },
+    {
+      source: "<| ID 'ok' { foo: 'bar' } |>",
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: { type: 'StringMatcher', value: 'ok' },
+        attrs: [],
+        args: [{ type: 'Argument', key: 'foo', value: { type: 'StringMatcher', value: 'bar' } }],
+      },
+    },
+    {
+      source: "<| ID foo='bar' { foo: 'bar' } |>",
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: null,
+        attrs: [{ type: 'AttributeMatcher', key: 'foo', value: 'bar' }],
+        args: [{ type: 'Argument', key: 'foo', value: { type: 'StringMatcher', value: 'bar' } }],
+      },
+    },
+    {
+      source: '<| ID { kw: <| KW |>, re: // } |>',
+      ast: {
+        type: 'TokenMatcher',
+        tagType: 'ID',
+        value: null,
+        attrs: [],
+        args: [
+          {
+            type: 'Argument',
+            key: 'kw',
+            value: { type: 'TokenMatcher', tagType: 'KW', value: null, attrs: [], args: [] },
+          },
+          { type: 'Argument', key: 're', value: emptyRegex },
+        ],
+      },
+    },
+  ],
+
+  NodeMatcher: [
+    {
+      source: '<ID>',
+      ast: {
+        type: 'NodeMatcher',
+        tagType: 'ID',
+        attrs: [],
+        args: [],
+      },
+    },
+    {
+      source: "<ID foo='bar'>",
+      ast: {
+        type: 'NodeMatcher',
+        tagType: 'ID',
+        attrs: [{ type: 'AttributeMatcher', key: 'foo', value: 'bar' }],
+        args: [],
+      },
+    },
+    {
+      source: "<ID foo='bar' baz='quux'>",
+      ast: {
+        type: 'NodeMatcher',
+        tagType: 'ID',
+        attrs: [
+          { type: 'AttributeMatcher', key: 'foo', value: 'bar' },
+          { type: 'AttributeMatcher', key: 'baz', value: 'quux' },
+        ],
+        args: [],
+      },
+    },
+    {
+      print: false,
+      source: '<ID {}>',
+      ast: {
+        type: 'NodeMatcher',
+        tagType: 'ID',
+        attrs: [],
+        args: [],
+      },
+    },
+    {
+      print: false,
+      source: "<ID {foo:'bar'}>",
+      ast: {
+        type: 'NodeMatcher',
+        tagType: 'ID',
+        attrs: [],
+        args: [{ type: 'Argument', key: 'foo', value: { type: 'StringMatcher', value: 'bar' } }],
+      },
+    },
+    {
+      source: "<ID { foo: 'bar' }>",
+      ast: {
+        type: 'NodeMatcher',
+        tagType: 'ID',
+        attrs: [],
+        args: [{ type: 'Argument', key: 'foo', value: { type: 'StringMatcher', value: 'bar' } }],
+      },
+    },
+    {
+      source: "<ID foo='bar' { foo: 'bar' }>",
+      ast: {
+        type: 'NodeMatcher',
+        tagType: 'ID',
+        attrs: [{ type: 'AttributeMatcher', key: 'foo', value: 'bar' }],
+        args: [{ type: 'Argument', key: 'foo', value: { type: 'StringMatcher', value: 'bar' } }],
+      },
+    },
+    {
+      source: '<ID { kw: <KW>, re: // }>',
+      ast: {
+        type: 'NodeMatcher',
+        tagType: 'ID',
+        attrs: [],
+        args: [
+          {
+            type: 'Argument',
+            key: 'kw',
+            value: { type: 'NodeMatcher', tagType: 'KW', attrs: [], args: [] },
+          },
+          { type: 'Argument', key: 're', value: emptyRegex },
+        ],
+      },
+    },
+  ],
+};
+
 describe('SPAM Expressions', () => {
   describe('parse', () => {
     const parse = (text) => miniparse(spamex, text, 'Expression', { monomorphic: false });
@@ -31,310 +317,138 @@ describe('SPAM Expressions', () => {
       expect(() => parse('')).toThrowError();
     });
 
-    describe('TokenTag', () => {
-      it('<|ID|>', () => {
-        expect(parse('<|ID|>')).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: null,
-          attrs: [],
-          args: [],
-        });
-      });
-
-      it('<| ID |>', () => {
-        expect(parse('<| ID |>')).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: null,
-          attrs: [],
-          args: [],
-        });
-      });
-
+    describe('TokenMatcher', () => {
       it(`<| ID'' |> throws`, () => {
         expect(() => parse(`<| ID'' |>`)).toThrowError();
-      });
-
-      it(`<| ID '' |>`, () => {
-        expect(parse(`<| ID '' |>`)).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: { type: 'String', value: '' },
-          attrs: [],
-          args: [],
-        });
-      });
-
-      it(`<| ID 'foo' |>`, () => {
-        expect(parse(`<| ID 'foo' |>`)).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: { type: 'String', value: 'foo' },
-          attrs: [],
-          args: [],
-        });
-      });
-
-      it(`<| ID // |>`, () => {
-        expect(parse(`<| ID // |>`)).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: emptyRegex,
-          attrs: [],
-          args: [],
-        });
-      });
-
-      it(`<| ID /of/ |>`, () => {
-        expect(parse(`<| ID /of/ |>`)).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: {
-            type: 'Regex',
-            pattern: {
-              type: 'Pattern',
-              alternatives: [
-                {
-                  type: 'Alternative',
-                  elements: [
-                    {
-                      type: 'Character',
-                      value: 'o',
-                    },
-                    {
-                      type: 'Character',
-                      value: 'f',
-                    },
-                  ],
-                },
-              ],
-            },
-            flags: {
-              type: 'Flags',
-              dotAll: false,
-              global: false,
-              ignoreCase: false,
-              multiline: false,
-              sticky: true,
-              unicode: false,
-            },
-          },
-          attrs: [],
-          args: [],
-        });
-      });
-
-      it(`<| ID foo='bar' |>`, () => {
-        expect(parse(`<| ID foo='bar' |>`)).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: null,
-          attrs: [{ type: 'Attribute', key: 'foo', value: 'bar' }],
-          args: [],
-        });
       });
 
       it(`<| ID foo='bar'baz='quux' |> throws`, () => {
         expect(() => parse(`<| ID foo='bar'baz='quux' |>`)).toThrowError();
       });
 
-      it(`<| ID foo='bar' baz='quux' |>`, () => {
-        expect(parse(`<| ID foo='bar' baz='quux' |>`)).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: null,
-          attrs: [
-            { type: 'Attribute', key: 'foo', value: 'bar' },
-            { type: 'Attribute', key: 'baz', value: 'quux' },
-          ],
-          args: [],
-        });
-      });
-
       it(`<| ID 'moof'vroom='graarrr' |> throws`, () => {
         expect(() => parse(`<| ID 'moof'vroom='graarrr' |>`)).toThrowError();
-      });
-
-      it(`<| ID 'moof' vroom='graarrr' |>`, () => {
-        expect(parse(`<| ID 'moof' vroom='graarrr' |>`)).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: { type: 'String', value: 'moof' },
-          attrs: [{ type: 'Attribute', key: 'vroom', value: 'graarrr' }],
-          args: [],
-        });
-      });
-
-      it(`<| ID {} |>`, () => {
-        expect(parse(`<| ID {} |>`)).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: null,
-          attrs: [],
-          args: [],
-        });
-      });
-
-      it(`<| ID {foo:'bar'} |>`, () => {
-        expect(parse(`<| ID {foo:'bar'} |>`)).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: null,
-          attrs: [],
-          args: [{ type: 'Argument', key: 'foo', value: { type: 'String', value: 'bar' } }],
-        });
-      });
-
-      it(`<| ID { foo: 'bar' } |>`, () => {
-        expect(parse(`<| ID { foo: 'bar' } |>`)).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: null,
-          attrs: [],
-          args: [{ type: 'Argument', key: 'foo', value: { type: 'String', value: 'bar' } }],
-        });
       });
 
       it(`<| ID 'ok'{ foo: 'bar' } |> throws`, () => {
         expect(() => parse(`<| ID 'ok'{ foo: 'bar' } |>`)).toThrowError();
       });
 
-      it(`<| ID 'ok' { foo: 'bar' } |>`, () => {
-        expect(parse(`<| ID 'ok' { foo: 'bar' } |>`)).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: { type: 'String', value: 'ok' },
-          attrs: [],
-          args: [{ type: 'Argument', key: 'foo', value: { type: 'String', value: 'bar' } }],
-        });
-      });
-
       it(`<| ID foo='bar'{ foo: 'bar' } |> throws`, () => {
         expect(() => parse(`<| ID foo='bar'{ foo: 'bar' } |>`)).toThrowError();
       });
 
-      it(`<| ID foo='bar' { foo: 'bar' } |>`, () => {
-        expect(parse(`<| ID foo='bar' { foo: 'bar' } |>`)).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: null,
-          attrs: [{ type: 'Attribute', key: 'foo', value: 'bar' }],
-          args: [{ type: 'Argument', key: 'foo', value: { type: 'String', value: 'bar' } }],
+      for (const { source, ast } of validTestCases.TokenMatcher) {
+        it(source, () => {
+          expect(parse(source)).toEqual(ast);
         });
-      });
-
-      it(`<| ID { kw: <| KW |>, re: // } |>`, () => {
-        expect(parse(`<| ID { kw: <| KW |>, re: // } |>`)).toEqual({
-          type: 'TokenTag',
-          tagType: 'ID',
-          value: null,
-          attrs: [],
-          args: [
-            {
-              type: 'Argument',
-              key: 'kw',
-              value: { type: 'TokenTag', tagType: 'KW', value: null, attrs: [], args: [] },
-            },
-            { type: 'Argument', key: 're', value: emptyRegex },
-          ],
-        });
-      });
+      }
     });
 
-    describe('NodeTag', () => {
+    describe('NodeMatcher', () => {
       it('< ID > throws', () => {
         expect(() => parse('< ID >')).toThrowError();
-      });
-
-      it('<ID>', () => {
-        expect(parse('<ID>')).toEqual({
-          type: 'NodeTag',
-          tagType: 'ID',
-          attrs: [],
-          args: [],
-        });
-      });
-
-      it(`<ID foo='bar'>`, () => {
-        expect(parse(`<ID foo='bar'>`)).toEqual({
-          type: 'NodeTag',
-          tagType: 'ID',
-          attrs: [{ type: 'Attribute', key: 'foo', value: 'bar' }],
-          args: [],
-        });
       });
 
       it(`<ID foo='bar'baz='quux'> throws`, () => {
         expect(() => parse(`<ID foo='bar'baz='quux'>`)).toThrowError();
       });
 
-      it(`<ID foo='bar' baz='quux'>`, () => {
-        expect(parse(`<ID foo='bar' baz='quux'>`)).toEqual({
-          type: 'NodeTag',
-          tagType: 'ID',
-          attrs: [
-            { type: 'Attribute', key: 'foo', value: 'bar' },
-            { type: 'Attribute', key: 'baz', value: 'quux' },
-          ],
-          args: [],
-        });
-      });
-
-      it(`<ID {}>`, () => {
-        expect(parse(`<ID {}>`)).toEqual({
-          type: 'NodeTag',
-          tagType: 'ID',
-          attrs: [],
-          args: [],
-        });
-      });
-
-      it(`<ID {foo:'bar'}>`, () => {
-        expect(parse(`<ID {foo:'bar'}>`)).toEqual({
-          type: 'NodeTag',
-          tagType: 'ID',
-          attrs: [],
-          args: [{ type: 'Argument', key: 'foo', value: { type: 'String', value: 'bar' } }],
-        });
-      });
-
-      it(`<ID { foo: 'bar' }>`, () => {
-        expect(parse(`<ID { foo: 'bar' }>`)).toEqual({
-          type: 'NodeTag',
-          tagType: 'ID',
-          attrs: [],
-          args: [{ type: 'Argument', key: 'foo', value: { type: 'String', value: 'bar' } }],
-        });
-      });
-
       it(`<ID foo='bar'{ foo: 'bar' }> throws`, () => {
         expect(() => parse(`<ID foo='bar'{ foo: 'bar' }>`)).toThrowError();
       });
 
-      it(`<ID foo='bar' { foo: 'bar' }>`, () => {
-        expect(parse(`<ID foo='bar' { foo: 'bar' }>`)).toEqual({
-          type: 'NodeTag',
-          tagType: 'ID',
-          attrs: [{ type: 'Attribute', key: 'foo', value: 'bar' }],
-          args: [{ type: 'Argument', key: 'foo', value: { type: 'String', value: 'bar' } }],
+      for (const { source, ast } of validTestCases.NodeMatcher) {
+        it(source, () => {
+          expect(parse(source)).toEqual(ast);
         });
-      });
+      }
+    });
+  });
 
-      it(`<ID { kw: <KW>, re: // }>`, () => {
-        expect(parse(`<ID { kw: <KW>, re: // }>`)).toEqual({
-          type: 'NodeTag',
-          tagType: 'ID',
+  describe('print', () => {
+    const print = (ast) => miniprint(spamex, ast, undefined, { monomorphic: false });
+    describe('TokenMatcher', () => {
+      for (const { source, ast, print: shouldPrint = true } of validTestCases.TokenMatcher) {
+        if (shouldPrint) {
+          it(source, () => {
+            expect(print(ast)).toEqual(source);
+          });
+        }
+      }
+    });
+
+    describe('NodeMatcher', () => {
+      for (const { source, ast, print: shouldPrint = true } of validTestCases.NodeMatcher) {
+        if (shouldPrint) {
+          it(source, () => {
+            expect(print(ast)).toEqual(source);
+          });
+        }
+      }
+    });
+  });
+
+  describe('buildTag', () => {
+    const spam = buildTag(spamex, 'Expression');
+
+    it.skip("spam`'${[]}'`", () => {
+      expect(spam`'${''}'`).toEqual({});
+    });
+
+    it.skip("spam`<| ID ${'value'} |>`", () => {
+      const attrs = [
+        {
+          type: 'AttributeMatcher',
+          key: 'foo',
+          value: 'bar',
+        },
+      ];
+      expect(spam`<ID ${attrs}>`).toEqual({
+        type: 'TokenMatcher',
+        value: {
+          value: null,
           attrs: [],
-          args: [
-            {
-              type: 'Argument',
-              key: 'kw',
-              value: { type: 'NodeTag', tagType: 'KW', attrs: [], args: [] },
-            },
-            { type: 'Argument', key: 're', value: emptyRegex },
-          ],
-        });
+          args: [],
+          tagType: 'ID',
+        },
+      });
+    });
+
+    it.skip('spam`<| ID ${[...attrs]} |>`', () => {
+      const attrs = [
+        {
+          type: 'AttributeMatcher',
+          key: 'foo',
+          value: 'bar',
+        },
+      ];
+      expect(spam`<ID ${attrs}>`).toEqual({
+        type: 'TokenMatcher',
+        value: {
+          value: null,
+          attrs,
+          args: [],
+          tagType: 'ID',
+        },
+      });
+    });
+
+    it('spam`<ID {${args}}>`', () => {
+      const args = [
+        {
+          type: 'Argument',
+          key: 'foo',
+          value: { type: 'StringMatcher', value: 'bar' },
+        },
+      ];
+      expect(spam`<ID {${args}}>`).toEqual({
+        type: 'NodeMatcher',
+        value: {
+          attrs: [],
+          args,
+          tagType: 'ID',
+        },
       });
     });
   });
