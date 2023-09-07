@@ -391,23 +391,25 @@ describe('SPAM Expressions', () => {
 
   describe('buildTag', () => {
     const spam = buildTag(spamex, 'Expression');
+    const str = (...args) => ({
+      type: 'StringMatcher',
+      value: { value: String.raw(...args) },
+    });
 
     it.skip("spam`'${[]}'`", () => {
       expect(spam`'${''}'`).toEqual({});
     });
 
-    it.skip("spam`<| ID ${'value'} |>`", () => {
-      const attrs = [
-        {
-          type: 'AttributeMatcher',
-          key: 'foo',
-          value: 'bar',
-        },
-      ];
-      expect(spam`<ID ${attrs}>`).toEqual({
+    it('spam`<| ID ${str`value`} |>`', () => {
+      expect(spam`<| ID ${str`value`} |>`).toEqual({
         type: 'TokenMatcher',
         value: {
-          value: null,
+          value: {
+            type: 'StringMatcher',
+            value: {
+              value: 'value',
+            },
+          },
           attrs: [],
           args: [],
           tagType: 'ID',
@@ -415,7 +417,7 @@ describe('SPAM Expressions', () => {
       });
     });
 
-    it.skip('spam`<| ID ${[...attrs]} |>`', () => {
+    it('spam`<| ID ${[...attrs]} |>`', () => {
       const attrs = [
         {
           type: 'AttributeMatcher',
@@ -423,7 +425,7 @@ describe('SPAM Expressions', () => {
           value: 'bar',
         },
       ];
-      expect(spam`<ID ${attrs}>`).toEqual({
+      expect(spam`<| ID ${attrs} |>`).toEqual({
         type: 'TokenMatcher',
         value: {
           value: null,
