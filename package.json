@@ -20,8 +20,8 @@
     "@bablr/miniparser-language-nonbacktracking-js-regex": "github:bablr-lang/miniparser-language-nonbacktracking-js-regex#4bb4de83d060b2e1caf7d9c9646b8780f87cced8"
   },
   "devDependencies": {
-    "@bablr/eslint-config-base": "github:bablr-lang/eslint-config-base#a49dbe6861a82d96864ee89fbf0ec1844a8a5e8e",
-    "@bablr/miniparser": "github:bablr-lang/miniparser#87231f180c632c7ef3a5fcc8de10cd8493275075",
+    "@bablr/eslint-config-base": "github:bablr-lang/eslint-config-base#c040bc95f2dddac160628e4757a412016044b3ef",
+    "@bablr/miniparser": "github:bablr-lang/miniparser#558833819c9d071e85f038517499463e2c7e1baf",
     "enhanced-resolve": "^5.12.0",
     "eslint": "^7.32.0",
     "eslint-import-resolver-enhanced-resolve": "^1.0.5",
