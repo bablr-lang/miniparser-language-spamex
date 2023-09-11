@@ -17,6 +17,7 @@
     "test": "mocha"
   },
   "dependencies": {
+    "@bablr/grammar": "github:bablr-lang/grammar#a280340581846073caf47fd531e7f365f4aef5f2",
     "@bablr/miniparser-language-nonbacktracking-js-regex": "github:bablr-lang/miniparser-language-nonbacktracking-js-regex#24b433f05d3d99b9199ed93dd28b0d5000fd8b1e"
   },
   "devDependencies": {

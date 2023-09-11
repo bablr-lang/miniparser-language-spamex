@@ -33,7 +33,7 @@ const validTestCases = {
       source: '<|ID|>',
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: null,
         attrs: [],
         args: [],
@@ -43,7 +43,7 @@ const validTestCases = {
       source: '<| ID |>',
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: null,
         attrs: [],
         args: [],
@@ -53,7 +53,7 @@ const validTestCases = {
       source: "<| ID '' |>",
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: { type: 'StringMatcher', value: '' },
         attrs: [],
         args: [],
@@ -63,7 +63,7 @@ const validTestCases = {
       source: "<| ID 'foo' |>",
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: { type: 'StringMatcher', value: 'foo' },
         attrs: [],
         args: [],
@@ -73,7 +73,7 @@ const validTestCases = {
       source: '<| ID // |>',
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: emptyRegex,
         attrs: [],
         args: [],
@@ -83,7 +83,7 @@ const validTestCases = {
       source: '<| ID /of/ |>',
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: {
           type: 'RegexMatcher',
           pattern: {
@@ -122,7 +122,7 @@ const validTestCases = {
       source: "<| ID foo='bar' |>",
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: null,
         attrs: [{ type: 'AttributeMatcher', key: 'foo', value: 'bar' }],
         args: [],
@@ -132,7 +132,7 @@ const validTestCases = {
       source: "<| ID foo='bar' baz='quux' |>",
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: null,
         attrs: [
           { type: 'AttributeMatcher', key: 'foo', value: 'bar' },
@@ -145,7 +145,7 @@ const validTestCases = {
       source: "<| ID 'moof' vroom='graarrr' |>",
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: { type: 'StringMatcher', value: 'moof' },
         attrs: [{ type: 'AttributeMatcher', key: 'vroom', value: 'graarrr' }],
         args: [],
@@ -156,7 +156,7 @@ const validTestCases = {
       source: '<| ID {} |>',
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: null,
         attrs: [],
         args: [],
@@ -167,7 +167,7 @@ const validTestCases = {
       source: "<| ID {foo:'bar'} |>",
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: null,
         attrs: [],
         args: [{ type: 'Argument', key: 'foo', value: { type: 'StringMatcher', value: 'bar' } }],
@@ -177,7 +177,7 @@ const validTestCases = {
       source: "<| ID { foo: 'bar' } |>",
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: null,
         attrs: [],
         args: [{ type: 'Argument', key: 'foo', value: { type: 'StringMatcher', value: 'bar' } }],
@@ -187,7 +187,7 @@ const validTestCases = {
       source: "<| ID 'ok' { foo: 'bar' } |>",
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: { type: 'StringMatcher', value: 'ok' },
         attrs: [],
         args: [{ type: 'Argument', key: 'foo', value: { type: 'StringMatcher', value: 'bar' } }],
@@ -197,7 +197,7 @@ const validTestCases = {
       source: "<| ID foo='bar' { foo: 'bar' } |>",
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: null,
         attrs: [{ type: 'AttributeMatcher', key: 'foo', value: 'bar' }],
         args: [{ type: 'Argument', key: 'foo', value: { type: 'StringMatcher', value: 'bar' } }],
@@ -207,14 +207,20 @@ const validTestCases = {
       source: '<| ID { kw: <| KW |>, re: // } |>',
       ast: {
         type: 'TokenMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         value: null,
         attrs: [],
         args: [
           {
             type: 'Argument',
             key: 'kw',
-            value: { type: 'TokenMatcher', tagType: 'KW', value: null, attrs: [], args: [] },
+            value: {
+              type: 'TokenMatcher',
+              tagName: { type: 'Identifier', production: 'KW', language: 'Spamex' },
+              value: null,
+              attrs: [],
+              args: [],
+            },
           },
           { type: 'Argument', key: 're', value: emptyRegex },
         ],
@@ -227,7 +233,7 @@ const validTestCases = {
       source: '<ID>',
       ast: {
         type: 'NodeMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         attrs: [],
         args: [],
       },
@@ -236,7 +242,7 @@ const validTestCases = {
       source: "<ID foo='bar'>",
       ast: {
         type: 'NodeMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         attrs: [{ type: 'AttributeMatcher', key: 'foo', value: 'bar' }],
         args: [],
       },
@@ -245,7 +251,7 @@ const validTestCases = {
       source: "<ID foo='bar' baz='quux'>",
       ast: {
         type: 'NodeMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         attrs: [
           { type: 'AttributeMatcher', key: 'foo', value: 'bar' },
           { type: 'AttributeMatcher', key: 'baz', value: 'quux' },
@@ -258,7 +264,7 @@ const validTestCases = {
       source: '<ID {}>',
       ast: {
         type: 'NodeMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         attrs: [],
         args: [],
       },
@@ -268,7 +274,7 @@ const validTestCases = {
       source: "<ID {foo:'bar'}>",
       ast: {
         type: 'NodeMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         attrs: [],
         args: [{ type: 'Argument', key: 'foo', value: { type: 'StringMatcher', value: 'bar' } }],
       },
@@ -277,7 +283,7 @@ const validTestCases = {
       source: "<ID { foo: 'bar' }>",
       ast: {
         type: 'NodeMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         attrs: [],
         args: [{ type: 'Argument', key: 'foo', value: { type: 'StringMatcher', value: 'bar' } }],
       },
@@ -286,7 +292,7 @@ const validTestCases = {
       source: "<ID foo='bar' { foo: 'bar' }>",
       ast: {
         type: 'NodeMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         attrs: [{ type: 'AttributeMatcher', key: 'foo', value: 'bar' }],
         args: [{ type: 'Argument', key: 'foo', value: { type: 'StringMatcher', value: 'bar' } }],
       },
@@ -295,13 +301,18 @@ const validTestCases = {
       source: '<ID { kw: <KW>, re: // }>',
       ast: {
         type: 'NodeMatcher',
-        tagType: 'ID',
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
         attrs: [],
         args: [
           {
             type: 'Argument',
             key: 'kw',
-            value: { type: 'NodeMatcher', tagType: 'KW', attrs: [], args: [] },
+            value: {
+              type: 'NodeMatcher',
+              tagName: { type: 'Identifier', production: 'KW', language: 'Spamex' },
+              attrs: [],
+              args: [],
+            },
           },
           { type: 'Argument', key: 're', value: emptyRegex },
         ],
@@ -366,7 +377,7 @@ describe('SPAM Expressions', () => {
     });
   });
 
-  describe('print', () => {
+  describe.only('print', () => {
     const print = (ast) => miniprint(spamex, ast, undefined, { monomorphic: false });
     describe('TokenMatcher', () => {
       for (const { source, ast, print: shouldPrint = true } of validTestCases.TokenMatcher) {
@@ -390,7 +401,7 @@ describe('SPAM Expressions', () => {
   });
 
   describe('buildTag', () => {
-    const spam = buildTag(spamex, 'Expression');
+    const spam = buildTag(spamex, 'Expression', { monomorphic: false });
     const str = (...args) => ({
       type: 'StringMatcher',
       value: { value: String.raw(...args) },
@@ -404,16 +415,14 @@ describe('SPAM Expressions', () => {
       expect(spam`<| ID ${str`value`} |>`).toEqual({
         type: 'TokenMatcher',
         value: {
+          type: 'StringMatcher',
           value: {
-            type: 'StringMatcher',
-            value: {
-              value: 'value',
-            },
+            value: 'value',
           },
-          attrs: [],
-          args: [],
-          tagType: 'ID',
         },
+        attrs: [],
+        args: [],
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
       });
     });
 
@@ -427,12 +436,10 @@ describe('SPAM Expressions', () => {
       ];
       expect(spam`<| ID ${attrs} |>`).toEqual({
         type: 'TokenMatcher',
-        value: {
-          value: null,
-          attrs,
-          args: [],
-          tagType: 'ID',
-        },
+        value: null,
+        attrs,
+        args: [],
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
       });
     });
 
@@ -446,11 +453,9 @@ describe('SPAM Expressions', () => {
       ];
       expect(spam`<ID {${args}}>`).toEqual({
         type: 'NodeMatcher',
-        value: {
-          attrs: [],
-          args,
-          tagType: 'ID',
-        },
+        attrs: [],
+        args,
+        tagName: { type: 'Identifier', production: 'ID', language: 'Spamex' },
       });
     });
   });

@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@bablr/eslint-config-base': github:bablr-lang/eslint-config-base#c040bc95f2dddac160628e4757a412016044b3ef
+  '@bablr/grammar': github:bablr-lang/grammar#a280340581846073caf47fd531e7f365f4aef5f2
   '@bablr/miniparser': github:bablr-lang/miniparser#558833819c9d071e85f038517499463e2c7e1baf
   '@bablr/miniparser-language-nonbacktracking-js-regex': github:bablr-lang/miniparser-language-nonbacktracking-js-regex#24b433f05d3d99b9199ed93dd28b0d5000fd8b1e
   enhanced-resolve: ^5.12.0
@@ -13,11 +14,12 @@ specifiers:
   prettier: ^2.0.5
 
 dependencies:
-  '@bablr/miniparser-language-nonbacktracking-js-regex': github.com/bablr-lang/miniparser-language-nonbacktracking-js-regex/24b433f05d3d99b9199ed93dd28b0d5000fd8b1e
+  '@bablr/grammar': github.com/bablr-lang/grammar/a280340581846073caf47fd531e7f365f4aef5f2
+  '@bablr/miniparser-language-nonbacktracking-js-regex': link:../miniparser-language-regex
 
 devDependencies:
   '@bablr/eslint-config-base': github.com/bablr-lang/eslint-config-base/c040bc95f2dddac160628e4757a412016044b3ef_eslint@7.32.0
-  '@bablr/miniparser': github.com/bablr-lang/miniparser/558833819c9d071e85f038517499463e2c7e1baf
+  '@bablr/miniparser': link:../miniparser
   enhanced-resolve: 5.15.0
   eslint: 7.32.0
   eslint-import-resolver-enhanced-resolve: 1.0.5
@@ -896,11 +898,6 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /escape-string-regexp/5.0.0:
-    resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
-    engines: {node: '>=12'}
-    dev: true
-
   /eslint-import-resolver-enhanced-resolve/1.0.5:
     resolution: {integrity: sha512-Ss07NWhqdeOHq+Jevl4f5gPqHoRKyNTSXUoLxP/dMCXUUCsowGFv7/ccJ4fMcAdeqL+WhfA/p4AYWbtY6fB0wQ==}
     dependencies:
@@ -1511,6 +1508,10 @@ packages:
   /isexe/2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
+
+  /iter-tools-es/7.5.3:
+    resolution: {integrity: sha512-xj+T3W48RBrooJhafZZ3m8l0JQ/GBmRTcGfqJx4rA/IevwPRkff/919C8EgfQP3HPTnJnHVi+0KgeGKYjoKzvg==}
+    dev: false
 
   /jest-diff/29.6.3:
     resolution: {integrity: sha512-3sw+AdWnwH9sSNohMRKA7JiYUJSRr/WS6+sEFfBuhxU5V5GlEVKfvUn8JuMHE0wqKowemR1C2aHy8VtXbaV8dQ==}
@@ -2339,17 +2340,10 @@ packages:
       - supports-color
     dev: true
 
-  github.com/bablr-lang/miniparser-language-nonbacktracking-js-regex/24b433f05d3d99b9199ed93dd28b0d5000fd8b1e:
-    resolution: {tarball: https://codeload.github.com/bablr-lang/miniparser-language-nonbacktracking-js-regex/tar.gz/24b433f05d3d99b9199ed93dd28b0d5000fd8b1e}
-    name: '@bablr/miniparser-language-nonbacktracking-js-regex'
-    version: 0.0.0
-    engines: {node: '>=12.0.0'}
-    dev: false
-
-  github.com/bablr-lang/miniparser/558833819c9d071e85f038517499463e2c7e1baf:
-    resolution: {tarball: https://codeload.github.com/bablr-lang/miniparser/tar.gz/558833819c9d071e85f038517499463e2c7e1baf}
-    name: '@bablr/miniparser'
+  github.com/bablr-lang/grammar/a280340581846073caf47fd531e7f365f4aef5f2:
+    resolution: {tarball: https://codeload.github.com/bablr-lang/grammar/tar.gz/a280340581846073caf47fd531e7f365f4aef5f2}
+    name: '@bablr/grammar'
     version: 0.0.0
     dependencies:
-      escape-string-regexp: 5.0.0
-    dev: true
+      iter-tools-es: 7.5.3
+    dev: false
