@@ -1,5 +1,5 @@
 import { expect } from 'expect';
-import { parse as miniparse, buildTag, print as miniprint } from '@bablr/miniparser';
+import { parse as miniparse, buildTag } from '@bablr/miniparser';
 import * as spamex from '@bablr/miniparser-language-spamex';
 
 const emptyRegex = {
@@ -373,29 +373,6 @@ describe('SPAM Expressions', () => {
         it(source, () => {
           expect(parse(source)).toEqual(ast);
         });
-      }
-    });
-  });
-
-  describe.only('print', () => {
-    const print = (ast) => miniprint(spamex, ast, undefined, { monomorphic: false });
-    describe('TokenMatcher', () => {
-      for (const { source, ast, print: shouldPrint = true } of validTestCases.TokenMatcher) {
-        if (shouldPrint) {
-          it(source, () => {
-            expect(print(ast)).toEqual(source);
-          });
-        }
-      }
-    });
-
-    describe('NodeMatcher', () => {
-      for (const { source, ast, print: shouldPrint = true } of validTestCases.NodeMatcher) {
-        if (shouldPrint) {
-          it(source, () => {
-            expect(print(ast)).toEqual(source);
-          });
-        }
       }
     });
   });
