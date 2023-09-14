@@ -7,7 +7,7 @@
   },
   "type": "module",
   "exports": {
-    ".": "./lib/language.js"
+    ".": "./lib/index.js"
   },
   "files": [
     "lib/**/*.js"
