@@ -1,7 +1,7 @@
 {
-  "name": "@bablr/miniparser-language-spamex",
+  "name": "@bablr/language-spamex",
   "version": "0.0.0",
-  "description": "A miniparser language for SPAM Expressions",
+  "description": "A BABLR language for SPAM Expressions",
   "engines": {
     "node": ">=12.0.0"
   },
@@ -18,11 +18,10 @@
   },
   "dependencies": {
     "@bablr/grammar": "github:bablr-lang/grammar#a280340581846073caf47fd531e7f365f4aef5f2",
-    "@bablr/miniparser-language-nonbacktracking-js-regex": "github:bablr-lang/miniparser-language-nonbacktracking-js-regex#24b433f05d3d99b9199ed93dd28b0d5000fd8b1e"
+    "@bablr/language-regex-vm-pattern": "github:bablr-lang/language-regex-vm-pattern#24b433f05d3d99b9199ed93dd28b0d5000fd8b1e"
   },
   "devDependencies": {
     "@bablr/eslint-config-base": "github:bablr-lang/eslint-config-base#c040bc95f2dddac160628e4757a412016044b3ef",
-    "@bablr/miniparser": "github:bablr-lang/miniparser#558833819c9d071e85f038517499463e2c7e1baf",
     "enhanced-resolve": "^5.12.0",
     "eslint": "^7.32.0",
     "eslint-import-resolver-enhanced-resolve": "^1.0.5",
@@ -31,8 +30,8 @@
     "prettier": "^2.0.5",
     "mocha": "^10.2.0"
   },
-  "repository": "git@github.com:bablr-lang/miniparser-language-spamex.git",
-  "homepage": "https://github.com/bablr-lang/miniparser-language-spamex",
+  "repository": "git@github.com:bablr-lang/language-spamex.git",
+  "homepage": "https://github.com/bablr-lang/language-spamex",
   "author": "Conrad Buck <conartist6@gmail.com>",
   "license": "MIT"
 }
