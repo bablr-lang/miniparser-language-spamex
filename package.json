@@ -19,10 +19,12 @@
     "clean": "rm lib/grammar.generated.js"
   },
   "dependencies": {
-    "@bablr/boot-helpers": "github:bablr-lang/boot-helpers#ff3b7b07f783800e33f533c9d4b2292819f4efc2",
+    "@bablr/agast-helpers": "github:bablr-lang/agast-helpers#06c2deeda4804fcb6a5022cf2db677f8e89eb249",
+    "@bablr/agast-vm-helpers": "github:bablr-lang/agast-vm-helpers#7236964708edb1ba2f596f1c0d0abb11b961e70f",
+    "@bablr/helpers": "github:bablr-lang/bablr-helpers#51d9d4ece66bd027ab08013d8ecab32c73f8d7fa",
     "@bablr/grammar": "github:bablr-lang/grammar#a280340581846073caf47fd531e7f365f4aef5f2",
-    "@bablr/language-cstml-string": "github:bablr-lang/language-cstml-string#194c98e1e255931a75b3831f482edaace4e56d2b",
-    "@bablr/language-regex-vm-pattern": "github:bablr-lang/language-regex-vm-pattern#551d823cfffba25f5812a2d505ef1d832b68ff59"
+    "@bablr/language-cstml": "github:bablr-lang/language-cstml#add41dc37a6e99dd3c4033a2e0f09b292976f17f",
+    "@bablr/language-regex-vm-pattern": "github:bablr-lang/language-regex-vm-pattern#954cec9c26f872706c6f45b673de4481ab1ef5ef"
   },
   "devDependencies": {
     "@babel/cli": "7.22.15",
@@ -30,8 +32,8 @@
     "@babel/plugin-proposal-decorators": "7.22.15",
     "@babel/plugin-transform-runtime": "^7.22.15",
     "@babel/runtime": "^7.23.2",
-    "@bablr/boot": "github:bablr-lang/boot#e3bab9d63ac466a0ead88d85c3265e4de2881ffe",
-    "@bablr/eslint-config-base": "github:bablr-lang/eslint-config-base#c040bc95f2dddac160628e4757a412016044b3ef",
+    "@bablr/boot": "github:bablr-lang/boot#e62754a310fa404e2efdc96176a1b8641c99a6d2",
+    "@bablr/eslint-config-base": "github:bablr-lang/eslint-config-base#49f5952efed27f94ee9b94340eb1563c440bf64e",
     "babel-plugin-macros": "3.1.0",
     "enhanced-resolve": "^5.12.0",
     "eslint": "^7.32.0",
