@@ -1,3 +1,3 @@
-# @bablr/miniparser-language-spamex
+# @bablr/language-en-spamex
 
-A miniparser language for match spamex: Structural Pattern Matcher Expressions
+A BABLR language for match spamex: Structural Pattern Matcher Expressions
