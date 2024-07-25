@@ -27,7 +27,7 @@
     "@bablr/helpers": "0.17.0",
     "@bablr/language-en-blank-space": "0.2.0",
     "@bablr/language-en-cstml": "0.4.0",
-    "@bablr/language-en-regex-vm-pattern": "0.3.0"
+    "@bablr/language-en-regex-vm-pattern": "0.4.0"
   },
   "devDependencies": {
     "@bablr/boot": "0.3.0",
