@@ -26,7 +26,7 @@
     "@bablr/agast-vm-helpers": "0.3.2",
     "@bablr/helpers": "0.18.1",
     "@bablr/language-en-blank-space": "0.3.1",
-    "@bablr/language-en-cstml": "0.4.2",
+    "@bablr/language-en-cstml": "0.4.3",
     "@bablr/language-en-regex-vm-pattern": "0.5.1"
   },
   "devDependencies": {
