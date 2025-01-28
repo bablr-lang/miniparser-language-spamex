@@ -27,6 +27,7 @@
     "@bablr/helpers": "^0.20.0",
     "@bablr/language-en-blank-space": "^0.5.0",
     "@bablr/language-en-cstml": "^0.6.0",
+    "@bablr/language-en-cstml-json": "*",
     "@bablr/language-en-regex-vm-pattern": "^0.7.0"
   },
   "devDependencies": {
